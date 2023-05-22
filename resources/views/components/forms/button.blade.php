@@ -1,0 +1,1 @@
+<button type="button" class="btn btn-warning text-center">製品削除</button>
