@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Http\Requests\ProductRequest;
 
 class HomeController extends Controller
 {
@@ -21,16 +22,32 @@ class HomeController extends Controller
 
     public function getAdd(){
         $this->data['title'] ='add product';
+        $this->data['errorMessage']='入力エラー';
         return view('clients.add',$this->data);
     }
 
-    public function postAdd(Request $request){
-        $request->validate([
-            // bắt buộc nhập là required
-            'product_name' => 'required | min:6',
-            'product_price' => 'required | integer',
-        ]);
+    // public function postAdd(Request $request){
+    public function postAdd(ProductRequest $request){
+        // $rules=[
+        //     // bắt buộc nhập là required
+        //     'product_name' => 'required | min:6',
+        //     'product_price' => 'required | integer',
+        // ];
+
+        // $messages =[
+        //      //trong trường hợp muốn hiển thị tên tự động thì dùng :attribute 入力してください
+        //      'product_name.required' => '品名入力してください',
+        //      'product_name.min' => '入力 :min 桁以上',
+        //      'product_price.required'=>'値段入力してください' ,
+
+        //      //có thể viết mà không cần tên trường(với trường hợp trùng required thì cũng dùng :attribute để hiển thị)
+        //      // 'required' => ' :attribute 入力してください',
+        //      'integer'=>'数字入力してください'
+        // ];
+
+        // $request->validate($rules,$messages);
     }
+
 
     public function dowloadImage(Request $request){
         if(!empty($request->image)){

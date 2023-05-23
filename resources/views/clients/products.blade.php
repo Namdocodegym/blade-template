@@ -10,7 +10,8 @@
 
 @section('content')
     <h1>Product</h1>
-    <x-alert type='info' content='ご注文ありがとうございました。' data-icon="check"></x-alert>
+    <x-alert type='info' content='製品追加してください' data-icon="check"></x-alert>
+    <x-inputs.button></x-inputs.button>
     {{-- @prepend đẩy nội dung mới lên trên  --}}
     @prepend('scripts')
         <script>

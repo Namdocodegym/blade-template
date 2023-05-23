@@ -9,6 +9,12 @@
 @endsection
 
 @section('content')
+{{-- câu lệnh if dùng để hiển thị thông báo và thiết lập màu nền --}}
+  {{-- @if (section('msg'))
+      <div class="alert alert-{{ session('type') }}">
+          {{ session('msg') }}
+      </div>
+  @endif --}}
   <h1>HOME</h1>
   @datetime('')
   
