@@ -2,6 +2,9 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\UserController;
+use Illuminate\Routing\RouteGroup;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -23,3 +26,7 @@ Route::get('/add',[HomeController::class,'getAdd' ])->name('add');
 Route::post('/add',[HomeController::class,'postAdd']);
 
 Route::get('download-image',[HomeController::class,'dowloadImage'])->name('download-image');
+
+Route::prefix('users')->group(function(){
+    Route::get('/',[UserController::class,'index']);
+});
