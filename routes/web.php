@@ -27,6 +27,8 @@ Route::post('/add',[HomeController::class,'postAdd']);
 
 Route::get('download-image',[HomeController::class,'dowloadImage'])->name('download-image');
 
-Route::prefix('users')->group(function(){
-    Route::get('/',[UserController::class,'index']);
+Route::prefix('users')->name('users.')->group(function(){
+    Route::get('/',[UserController::class,'index'])->name('index');
+    Route::get('/add',[UserController::class,'add'])->name('add');
+    Route::post('/add',[UserController::class,'postAdd'])->name('post-add');
 });

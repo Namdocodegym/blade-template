@@ -20,8 +20,9 @@
             </tr>
         </thead>
         <tbody>
-            @if (!empty($users))
-            @foreach ($users as $key=>$item)
+            <a href="{{ route('users.add') }}" class="btn btn-primary">新規登録</a>
+            @if (!empty($usersList))
+            @foreach ($usersList as $key=>$item)
             <tr>
                 <td>{{ $key+1 }}</td>
                 <td>{{ $item->name }}</td>
