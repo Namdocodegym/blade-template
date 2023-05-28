@@ -19,7 +19,9 @@ class UserController extends Controller
     public function index(){
         $title ='ユーザ一覧';
 
+        //$statement = $this->users->statementUser("SELECT * FROM users");
         
+        $this->users->learnQueryBuilder();
 
         $usersList = $this->users->getAllUsers();
 
@@ -56,9 +58,77 @@ class UserController extends Controller
                 date('Y-m-d H:i:s')
             ];
 
-            $this->users->addUsers($dataInsert);
+            $this->users->addUser($dataInsert);
 
             return redirect()->route('users.index')->with('msg','登録完了しました');
             // chuyển hướng đến trang index và hiển thị thông báo thành công
+    }
+
+    public function getEdit(Request $request ,$id=0){
+        $title ='編集';
+
+        if(!empty($id)){
+            $userDetail = $this->users->getDetail($id);
+            if(!empty($userDetail[0])){
+                $request->session()->put('id',$id);
+                $userDetail = $userDetail[0];
+
+            }else{
+                return redirect()->route('users.index')->with('msg','ユーザ存在しない');
+            }
+        }else{
+            return redirect()->route('users.index')->with('msg','存在しない');
+        }
+
+        return view('clients.users.edit',compact('title','userDetail'));
+    }
+
+    public function postEdit(Request $request){
+        $id = session('id');
+        if(empty($id)){
+            return back()->with('smg','存在してない');
+        }
+        $request->validate( 
+            [ 
+                'fullname' => 'required | min:5',
+                'email'=> 'required |email |unique:users,email,'.$id
+
+            ],[
+                'fullname.required'=>'名前入力してください',
+                'fullname.min' => '名前５桁以上入力してください',
+                'email.required'=>'email 入力してください',
+                'email.email'=>'email正しく入力してください',
+                'email.unique'=>'email存在しています'
+            ]
+            );
+            $dataUpdate = [
+                $request->fullname,
+                $request->email,
+                date('Y-m-d H:i:s')
+            ];
+
+            $this->users->updateUser($dataUpdate,$id);
+
+            return back()->with('msg','更新しました');
+    }
+
+    public function delete($id=0){
+        if(!empty($id)){
+            $userDetail = $this->users->getDetail($id);
+            if(!empty($userDetail[0])){
+                $deleteStatus = $this->users->deleteUser($id);
+                if($deleteStatus){
+                    $msg='削除しました';
+                }else{
+                    $msg='削除できません！しばらく再削除してください';
+                }
+            }else{
+                $msg='ユーザ存在しない';
+            }
+        }else{
+            $msg='存在しない';
+        }
+
+        return redirect()->route('users.index')->with('msg',$msg);
     }
 }
