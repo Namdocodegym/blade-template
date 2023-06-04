@@ -17,7 +17,8 @@
     <form action="{{ route('users.post-edit') }}" method="POST">
         <div class="mb-3">
             <label for="">ユーザ名</label>
-            <input type="text" class="form-control" name="fullname" placeholder="名前" value="{{ old('fullname') ?? $userDetail->name}}">
+            <input type="text" class="form-control" name="fullname" placeholder="名前" 
+            value="{{ old('fullname') ?? $userDetail->name}}">
             @error('fullname')
                 <span style="color: red">{{ $message }}</span>
             @enderror

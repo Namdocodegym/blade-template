@@ -16,14 +16,43 @@ class UserController extends Controller
     {
         $this->users = new Users();
     }
-    public function index(){
+    public function index(Request $request){
         $title ='ユーザ一覧';
 
         //$statement = $this->users->statementUser("SELECT * FROM users");
         
-        $this->users->learnQueryBuilder();
+        //$this->users->learnQueryBuilder();
 
-        $usersList = $this->users->getAllUsers();
+        
+        $filters=[];
+        $keywords = null;
+
+        if(!empty($request->status)){
+            $status = $request->status;
+            if($status=='active'){
+                $status = 1;
+
+            }else{
+                $status=0;
+            }
+            $filters[]=['users.status','=',$status];
+
+        }
+
+        if(!empty($request->group_id)){
+            $groupId = $request->group_id;
+            
+            $filters[]=['users.group_id','=',$groupId];
+
+        }
+
+        if(!empty($request->keywords)){
+            $keywords = $request->keywords;
+            
+        }
+
+
+            $usersList = $this->users->getAllUsers($filters,$keywords);
 
         return view('clients.users.lists',compact('title','usersList'));
 
