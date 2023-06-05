@@ -10,11 +10,14 @@ class Groups extends Model
 {
     use HasFactory;
 
-    protected $table='groups';
-    public function getAll(){
-        $groups= DB::table($this->table)
+    protected $table = 'groups';
+    
+    public function getAll()
+    {
+        $groups = DB::table($this->table)
         ->orderBy('name','ASC')
         ->get();
+
         return $groups;
     }
 }

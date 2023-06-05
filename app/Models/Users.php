@@ -13,25 +13,37 @@ class Users extends Model
 
     protected $table ='users';
 
-    public function getAllUsers($filters=[],$keywords=null){
+    public function getAllUsers($filters=[],$keywords=null, $sortByArr = null){
 
         //$users = DB::select('SELECT * FROM users ORDER BY created_at DESC');
         //DB::enableQueryLog();
         $users = DB::table($this->table)
         ->select('users.*','groups.name as group_name')
-        ->join('groups','users.group_id','=','groups.id')
-        ->orderBy('users.create_at','DESC');
+        ->join('groups','users.group_id','=','groups.id');
+
+        $orderBy ='users.created_at';
+        $orderType = 'asc';
+
+        if(!empty($sortByArr)&& is_array($sortByArr)){
+            if(!empty($sortByArr['sortBy'])&& !empty($sortByArr['sortType'])){
+                $orderBy = trim($sortByArr['sortBy']);
+                $orderType = trim($sortByArr['sortType']);
+            }
+        }
+        $users=$users->orderBy($orderBy,$orderType);
+        
         if(!empty($filters)){
             $users =$users->where($filters);
         }
 
         if(!empty($keywords)){
             $users=$users->where(function($query) use ($keywords){
-                $query->orWhere('name','like','%'.$keywords.'%');
+                $query->orWhere('users.name','like','%'.$keywords.'%');
                 $query->orWhere('email','like','%'.$keywords.'%');
             });
         }
-        $users=$users->get();
+
+        $users = $users->get();
         //$sql= dd(DB::getQueryLog());
         //dd($sql);
         return $users;

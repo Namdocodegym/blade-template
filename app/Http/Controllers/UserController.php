@@ -51,10 +51,28 @@ class UserController extends Controller
             
         }
 
+        //xử lý logic
+        $sortBy = $request->input('sortBy');
+        $sortType = $request->input('sortType');
 
-            $usersList = $this->users->getAllUsers($filters,$keywords);
+        $allowSort = ['asc','desc'];
 
-        return view('clients.users.lists',compact('title','usersList'));
+        if(!empty($sortType)&& in_array($sortType,$allowSort)){
+            if($sortType=='asc'){
+                $sortType = 'desc';
+            }else{
+                $sortType = 'asc';
+            }
+        }else{
+            $sortType = 'desc';
+        }
+
+        $sortArr =[
+            'sortBy' => $sortBy,
+            'sortType' => $sortType
+        ];
+            $usersList = $this->users->getAllUsers($filters,$keywords,$sortArr);
+        return view('clients.users.lists',compact('title','usersList','sortType'));
 
     }
 
