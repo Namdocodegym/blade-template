@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\Users;
+use App\Http\Requests\UserRequest;
 
 
 use function PHPUnit\Framework\returnSelf;
@@ -12,6 +13,8 @@ use function PHPUnit\Framework\returnSelf;
 class UserController extends Controller
 {
     private $users;
+
+    const _PER_PAGE =4;
     public function __construct()
     {
         $this->users = new Users();
@@ -71,38 +74,26 @@ class UserController extends Controller
             'sortBy' => $sortBy,
             'sortType' => $sortType
         ];
-            $usersList = $this->users->getAllUsers($filters,$keywords,$sortArr);
+            $usersList = $this->users->getAllUsers($filters,$keywords,$sortArr,self::_PER_PAGE); // const _PER_PAGE = 4;
         return view('clients.users.lists',compact('title','usersList','sortType'));
 
     }
 
     public function add(Request $request){
         $title ='ユーザ登録';
+        $allGroups =getAllGroups();
 
-        return view('clients.users.add',compact('title'));
+        return view('clients.users.add',compact('title','allGroups'));
     }
 
-    public function postAdd(Request $request){
-        $request->validate( 
-            [ 
-                'fullname' => 'required | min:5',
-                'email'=> 'required |email |unique:users'
-                // unique dùng để kiểm tra xem dữ liệu nhập có bị trùng lặp hay không
-                //users là nơi chứa dữ liệu
-
-            ],[
-                'fullname.required'=>'名前入力してください',
-                'fullname.min' => '名前５桁以上入力してください',
-                'email.required'=>'email 入力してください',
-                'email.email'=>'email正しく入力してください',
-                'email.unique'=>'email存在しています'
-            ]
-            );
+    public function postAdd(UserRequest $request){
 
             $dataInsert = [
-                $request->fullname,
-                $request->email,
-                date('Y-m-d H:i:s')
+                'name' => $request->name,
+                'email' => $request->email,
+                'group_id' => $request->group_id,
+                'status' => $request->status,
+                'created_at' => date('Y-m-d H:i:s')
             ];
 
             $this->users->addUser($dataInsert);
@@ -113,6 +104,7 @@ class UserController extends Controller
 
     public function getEdit(Request $request ,$id=0){
         $title ='編集';
+        $allGroups =getAllGroups();
 
         if(!empty($id)){
             $userDetail = $this->users->getDetail($id);
@@ -127,31 +119,20 @@ class UserController extends Controller
             return redirect()->route('users.index')->with('msg','存在しない');
         }
 
-        return view('clients.users.edit',compact('title','userDetail'));
+        return view('clients.users.edit',compact('title','userDetail','allGroups'));
     }
 
-    public function postEdit(Request $request){
+    public function postEdit(UserRequest $request){
         $id = session('id');
         if(empty($id)){
             return back()->with('smg','存在してない');
         }
-        $request->validate( 
-            [ 
-                'fullname' => 'required | min:5',
-                'email'=> 'required |email |unique:users,email,'.$id
-
-            ],[
-                'fullname.required'=>'名前入力してください',
-                'fullname.min' => '名前５桁以上入力してください',
-                'email.required'=>'email 入力してください',
-                'email.email'=>'email正しく入力してください',
-                'email.unique'=>'email存在しています'
-            ]
-            );
             $dataUpdate = [
-                $request->fullname,
-                $request->email,
-                date('Y-m-d H:i:s')
+                'name' => $request->name,
+                'email' => $request->email,
+                'group_id' => $request->group_id,
+                'status' => $request->status,
+                'update_at' => date('Y-m-d H:i:s')
             ];
 
             $this->users->updateUser($dataUpdate,$id);

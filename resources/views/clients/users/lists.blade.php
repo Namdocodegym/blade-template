@@ -23,11 +23,9 @@
             <div class="col-3">
                 <select class="form-control" name="group_id">
                     <option value="0">Group All</option>
-                    @php
-                        $groups = getAllGroups();
-                    @endphp
-                    @if (!empty($groups))
-                        @foreach ($groups as $item)
+                    
+                    @if (!empty($allGroups))
+                        @foreach ($allGroups as $item)
                             <option value="{{ $item->id }}"
                                 {{ request()->group_id == $item->id? 'selected' : '' }}>
                                 {{ $item->name }}</option>
@@ -91,4 +89,8 @@
         </tbody>
     </table>
 
+    <div class="d-flex justify-content-end"> 
+        {{ $usersList->links() }}
+    </div>
+    
 @endsection

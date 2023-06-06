@@ -5,6 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Http\Request;
+
 
 
 class Users extends Model
@@ -13,7 +15,7 @@ class Users extends Model
 
     protected $table ='users';
 
-    public function getAllUsers($filters=[],$keywords=null, $sortByArr = null){
+    public function getAllUsers($filters=[],$keywords=null, $sortByArr = null,$perPage = null){
 
         //$users = DB::select('SELECT * FROM users ORDER BY created_at DESC');
         //DB::enableQueryLog();
@@ -43,14 +45,26 @@ class Users extends Model
             });
         }
 
-        $users = $users->get();
+        //$users = $users->get();
+
+        if(!empty($perPage)){ // $perPage= null
+            $users = $users->paginate($perPage)->appends(request()->query()); //1ページにレーコドは何件表示
+            //$users = $users->paginate($perPage)->withQueryString();
+            
+        }else{
+            $users = $users->get();
+        }
+        
+
         //$sql= dd(DB::getQueryLog());
         //dd($sql);
         return $users;
     }
 
     public function addUser($data){
-        DB::insert('INSERT INTO users (name,email,created_at) values (?,?,?)', $data );
+        //DB::insert('INSERT INTO users (name,email,created_at) values (?,?,?)', $data );
+        return DB::table($this->table)->insert($data);
+
         
     }
 
@@ -60,8 +74,10 @@ class Users extends Model
     }
 
     public function updateUser($data,$id){
-        $data[] = $id;
-        return DB::update('UPDATE users SET name = ?,email =?,update_at=? where id = ?', $data);
+        // $data[] = $id;
+        // return DB::update('UPDATE users SET name = ?,email =?,update_at=? where id = ?', $data);
+
+        return DB::table($this->table)->where('id',$id)->update($data);
     }
 
     public function deleteUser($id){
