@@ -21,7 +21,8 @@ class Users extends Model
         //DB::enableQueryLog();
         $users = DB::table($this->table)
         ->select('users.*','groups.name as group_name')
-        ->join('groups','users.group_id','=','groups.id');
+        ->join('groups','users.group_id','=','groups.id')
+        ->where('trash',0);
 
         $orderBy ='users.created_at';
         $orderType = 'asc';
@@ -49,7 +50,7 @@ class Users extends Model
 
         if(!empty($perPage)){ // $perPage= null
             $users = $users->paginate($perPage)->appends(request()->query()); //1ページにレーコドは何件表示
-            //$users = $users->paginate($perPage)->withQueryString();
+            // $users = $users->paginate($perPage)->withQueryString();
             
         }else{
             $users = $users->get();
@@ -81,7 +82,8 @@ class Users extends Model
     }
 
     public function deleteUser($id){
-        return DB::delete('DELETE FROM users WHERE id = ?', [$id]);
+        //return DB::delete('DELETE FROM users WHERE id = ?', [$id]);
+        return DB::table($this->table)->where('id',$id)->delete();
     }
 
     public function statementUser($sql){
