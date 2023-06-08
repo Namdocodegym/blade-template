@@ -6,14 +6,32 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
-
-
+use App\Models\Phone;
+use App\Models\Groups;
+use App\Models\Users as ModelsUsers;
 
 class Users extends Model
 {
     use HasFactory;
 
     protected $table ='users';
+
+    public function phone(){
+        return $this->hasOne(
+            Phone::class,
+            'user_id',
+            'id'
+        );
+    }
+
+    public function group(){
+        return $this->belongsTo(
+            Groups::class,
+            'group_id',
+            'id'
+        ); 
+
+    }
 
     public function getAllUsers($filters=[],$keywords=null, $sortByArr = null,$perPage = null){
 
@@ -201,4 +219,6 @@ class Users extends Model
         //lấy 1 bản ghi đầu tiên của table(lấy thông tin chi tiết)
         // $detai= DB::table($this->table)->first();
     }
+
+    
 }

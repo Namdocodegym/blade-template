@@ -38,10 +38,19 @@ class PostController extends Controller
         //     }); // status==0のレコードを省く　＝＞status==0以外表示する。
         // dd($activePosts);
 
-        $allPosts = Post::cursor();
-        foreach($allPosts as $item){
-            echo $item->title.'<br>';
-        }
+        // $allPosts = Post::cursor();
+        // foreach($allPosts as $item){
+        //     echo $item->title.'<br>';
+        // }
+
+        $title = 'リスト';
+
+        // $allPosts = Post::all();
+        $allPosts = Post::withTrashed()
+        ->orderBy('deleted_at','ASC')
+        ->orderBy('id','DESC')
+        ->get();
+        return view('clients/posts/lists',compact('title','allPosts'));
     }
     
 
@@ -89,7 +98,55 @@ class PostController extends Controller
         ],$dataUpdate);
     }
 
+    public function delete($id){
+        // $id = 16;
+        // $status = Post::destroy($id);
+        // dd($status);
 
+        
+        // $status = Post::destroy(collect([14,15]));
+        // dd($status);
+
+        $status = Post::where('id',$id)->delete();
+        dd($status);
+    }
+
+    public function handleDeleteAny(Request $request){
+        $deleteArr = $request->delete;
+
+        if(!empty($deleteArr)){
+            $status = Post::destroy($deleteArr);
+            if($status){
+                $msg = 'すべて'.count($deleteArr).'件削除しました';
+            }else{
+                $msg= '現在、削除出来ません。しばらく再削除してください';
+            }
+        }else{
+            $msg = '削除記事を選択してください';
+        }
+
+        return redirect()->route('posts.index')->with('msg',$msg);
+    }
+
+    public function restore($id){
+        // $post = Post::withTrashed()->where('id',$id)->first();
+
+        $post = Post::onlyTrashed()->where('id',$id)->first();
+        if(!empty($post)){
+            $post->restore();
+            return redirect()->route('posts.index')->with('msg','回復しました');
+        }
+        return redirect()->route('posts.index')->with('msg','記事存在していない');
+    }
+
+    public function forceDelete($id){
+        $post = Post::onlyTrashed()->where('id',$id)->first();
+        if(!empty($post)){
+            $post->forceDelete();
+            return redirect()->route('posts.index')->with('msg','強制削除しました');
+        }
+        return redirect()->route('posts.index')->with('msg','記事存在していない');
+    }
 
 
 }

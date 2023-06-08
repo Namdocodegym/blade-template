@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\Users;
+use App\Models\Phone;
+use App\Models\Groups;
 use App\Http\Requests\UserRequest;
 
 
@@ -158,5 +160,37 @@ class UserController extends Controller
         }
 
         return redirect()->route('users.index')->with('msg',$msg);
+    }
+
+    public function relations(){
+        //持っているidから取得
+        // $phone = Users::find(40)->phone;
+        // $idPhone = $phone->id;
+        // $phoneNumber = $phone->phone;
+        // echo 'id phone:'.$idPhone.'<br>';
+        // echo 'phone number:'.$phoneNumber.'<br>';
+
+        // $phone = Users::find(40)->phone();
+        //dd($phone)
+
+        //phoneから情報を調べて、取得する。
+        // $user = Phone::where('phone','012345678')->first()->user;
+        // $fullName = $user->name;
+        // $email = $user->email;
+
+        // echo 'fullName:'.$fullName.'<br>';
+        // echo 'email:'.$email;
+
+        // $users= Groups::find(1)->users()->where('id','>=',5)->get();
+        // if($users->count()>0){
+        //     foreach($users as $item){
+        //         echo $item->name.'<br>';
+        //     }
+        // }
+
+        $group = Users::find(4)->group;
+        $groupName = $group->name;
+        dd($groupName);
+
     }
 }

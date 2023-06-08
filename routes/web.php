@@ -35,10 +35,15 @@ Route::prefix('users')->name('users.')->group(function(){
     Route::get('/edit/{id}',[UserController::class,'getEdit'])->name('edit');
     Route::post('/update',[UserController::class,'postEdit'])->name('post-edit');
     Route::get('/delete/{id}',[UserController::class,'delete'])->name('delete');
+    Route::get('/hoc-relation',[UserController::class,'relations']);
 });
 
 Route::prefix('posts')->name('posts.')->group(function(){
     Route::get('/',[PostController::class,'index'])->name('index');
     Route::get('/add',[PostController::class,'add'])->name('add');
     Route::get('/update/{id}',[PostController::class,'update'])->name('update');
+    Route::get('/delete/{id}',[PostController::class,'delete'])->name('delete');
+    Route::post('/delete-any',[PostController::class,'handleDeleteAny'])->name('delete-any');
+    Route::get('/restore/{id}',[PostController::class,'restore'])->name('restore');
+    Route::get('/force-delete/{id}',[PostController::class,'forceDelete'])->name('force-delete');
 });
