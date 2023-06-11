@@ -5,6 +5,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\UserController;
 use Illuminate\Routing\RouteGroup;
 use App\Http\Controllers\PostController;
+use App\Models\Mechanics;
 
 
 /*
@@ -46,4 +47,9 @@ Route::prefix('posts')->name('posts.')->group(function(){
     Route::post('/delete-any',[PostController::class,'handleDeleteAny'])->name('delete-any');
     Route::get('/restore/{id}',[PostController::class,'restore'])->name('restore');
     Route::get('/force-delete/{id}',[PostController::class,'forceDelete'])->name('force-delete');
+});
+
+Route::get('/',function(){
+    $owner = Mechanics::find(1)->carOwner;
+    dd($owner);
 });

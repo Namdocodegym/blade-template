@@ -14,7 +14,12 @@ class Groups extends Model
     protected $table = 'groups';
 
     public function users(){
-        return $this->hasOne(
+        // return $this->hasOne(
+        //     Users::class,
+        //     'group_id',
+        //     'id'
+        // );
+        return $this->hasMany(
             Users::class,
             'group_id',
             'id'
