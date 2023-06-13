@@ -5,7 +5,13 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\UserController;
 use Illuminate\Routing\RouteGroup;
 use App\Http\Controllers\PostController;
+use App\Models\Categories;
 use App\Models\Mechanics;
+use App\Models\Country;
+use App\Models\Posts;
+use App\Models\User;
+use App\Models\Groups;
+use App\Models\Comments;
 
 
 /*
@@ -50,6 +56,38 @@ Route::prefix('posts')->name('posts.')->group(function(){
 });
 
 Route::get('/',function(){
-    $owner = Mechanics::find(1)->carOwner;
-    dd($owner);
+    $posts = Posts::withCount(['comments','votes as likes'=>function($query){
+        $query->where('value','>',0);
+    }])->get();
+    dd($posts);
+    // $post = Posts::has('comments')->get();  最低１コメント
+    // $post = Posts::whereHas('comments','>=',2)->get(); //whereHas 条件
+    // $post = Posts::whereHas('comments',function($query){
+    //     $query->whereNotNull('image');
+    // })->get(); //tra ve it nhat 1 comment va co chua img
+    // $post = Posts::doesntHave('comments')->get();
+    // dd($post); 
+    // $users = Groups::find(1);
+    // $users = $users->users;
+    // dd($users);
+    // $phone = User::find(4)->phone;
+    // dd($phone);
+    // $owner = Mechanics::find(1)->carOwner;
+    // dd($owner);
+    // $posts = Country::find(2)->posts;
+    // dd($posts);
+    // $posts = Categories::find('1')->posts;
+    // dd($posts);
+    // $categories = Posts::find(2)->categories;
+    // foreach($categories as $category){
+    //     // if(!empty($category->pivot->created_at)){
+    //     //     echo                    
+    
+    
+    // $category->pivot->created_at;
+    //     // }
+    //     // dd($category->pivot);
+    //     echo $category->pivot->post_id.'-';
+    //     echo $category->pivot->status;
+    // }
 });

@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use App\Models\Phone;
 
 class User extends Authenticatable
 {
@@ -42,4 +43,18 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    public function phone(){
+        return $this->hasOne(
+            Phone::class,
+            'user_id',
+            'id'
+        )->withDefault(
+            // [ 'phone'=>'0123456789'] //cach khac
+            function($phone){
+                $phone->phone ='khong xac dinh';
+            }
+        
+        );
+    }
 }

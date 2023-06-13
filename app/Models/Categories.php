@@ -5,22 +5,20 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Posts;
-use App\Models\User;
 
-class Country extends Model
+class Categories extends Model
 {
-
     use HasFactory;
-    protected $table ='country';
+
+    protected $table ="categories";
 
     public function posts(){
-        return $this->hasManyThrough(
+        return $this->belongsToMany(
             Posts::class,
-            User::class,
-            'country_id',
-            'user_id',
-            'id',
-            'id'
+            'categories_posts',
+            'category_id',
+            'post_id'
         );
     }
+
 }
