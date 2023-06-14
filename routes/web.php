@@ -10,6 +10,7 @@ use App\Models\Mechanics;
 use App\Models\Country;
 use App\Models\Posts;
 use App\Models\User;
+use App\Models\Users;
 use App\Models\Groups;
 use App\Models\Comments;
 
@@ -56,10 +57,53 @@ Route::prefix('posts')->name('posts.')->group(function(){
 });
 
 Route::get('/',function(){
-    $posts = Posts::withCount(['comments','votes as likes'=>function($query){
-        $query->where('value','>',0);
-    }])->get();
-    dd($posts);
+
+    $post = Posts::find(1);
+
+    $post->comments()->create([
+        'name' =>'Van Quan 3',
+        'content' =>'comment 8'
+    ]);
+
+    // $post->comments()->saveMany([
+    //     new Comments([
+    //         'name' =>'Van Quan 1',
+    //         'content' =>'comment 6'
+    //     ]),
+    //     new Comments([
+    //         'name' =>'Van Quan 2',
+    //         'content' =>'comment 7'
+    //     ])
+    // ]); // dùng khi muốn thêm nhiều mảng thông tin.
+
+    // $comment = new Comments([
+    //     'name' =>'Van Quan',
+    //     'content' =>'comment 5'
+    // ]);
+    // $post->comments()->save($comment); //cap nhat,them 1 du lieu 
+
+    // $users = Users::with(['group'=>function($query){
+    //     $query->where('id','>',1);
+    // }])->get(); //tai du lieu 1 lan and them rang buoc function
+
+    // foreach ($users as $user){ //loc qua tung giu lieu
+    //     if(!empty($user->group->name)){  
+    //         echo $user->group->name.'<br/>';
+    //     }
+    // }
+
+
+    // $users = Users::all(); //lay tat ca du lieu
+
+    // foreach ($users as $user){ //loc qua tung giu lieu
+    //     if(!empty($user->group->name)){  
+    //         echo $user->group->name.'<br/>';
+    //     }
+    // }
+    // $posts = Posts::withCount(['comments','votes as likes'=>function($query){
+    //     $query->where('value','>',0);
+    // }])->get();
+    // dd($posts);
     // $post = Posts::has('comments')->get();  最低１コメント
     // $post = Posts::whereHas('comments','>=',2)->get(); //whereHas 条件
     // $post = Posts::whereHas('comments',function($query){
@@ -81,10 +125,7 @@ Route::get('/',function(){
     // $categories = Posts::find(2)->categories;
     // foreach($categories as $category){
     //     // if(!empty($category->pivot->created_at)){
-    //     //     echo                    
-    
-    
-    // $category->pivot->created_at;
+    //     //     echo $category->pivot->created_at;
     //     // }
     //     // dd($category->pivot);
     //     echo $category->pivot->post_id.'-';
