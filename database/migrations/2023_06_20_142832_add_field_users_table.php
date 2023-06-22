@@ -11,16 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        if(!Schema::hasTable('posts')){
-            Schema::create('posts', function (Blueprint $table) {
-            $table->id();
-            $table->string('title');
-            $table->string('content');
-            $table->integer('status');
-            $table->timestamps();
+        //
+        Schema::table('users',function(Blueprint $table){
+            $table->integer('country_id')->after('email');
         });
-        }
-        
     }
 
     /**
@@ -28,6 +22,9 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('posts');
+        //
+        Schema::table('users',function(Blueprint $table){
+            $table->dropColumn('country_id');
+        });
     }
 };

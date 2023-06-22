@@ -12,7 +12,9 @@ return new class extends Migration
     public function up(): void
     {
         //
-        Schema::rename('groups','user_groups');
+        Schema::table('attributes',function(Blueprint $table){
+            $table->dropPrimary('attributes_code_primary');
+        });
     }
 
     /**
@@ -21,6 +23,8 @@ return new class extends Migration
     public function down(): void
     {
         //
-        Schema::rename('user_groups','groups');
+        Schema::table('attributes',function(Blueprint $table){
+            $table->primary('code');
+        });
     }
 };

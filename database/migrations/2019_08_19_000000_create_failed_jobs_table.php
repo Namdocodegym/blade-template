@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('uuid')->unique();
             $table->text('connection');
+            $table->text('abc');
             $table->text('queue');
             $table->longText('payload');
             $table->longText('exception');
